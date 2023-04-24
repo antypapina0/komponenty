@@ -2,6 +2,7 @@ package components;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.*;
 
 public class TextFieldComponent extends JPanel {
     private JTextField textField;
@@ -18,5 +19,11 @@ public class TextFieldComponent extends JPanel {
     public void setTextField(JTextField textField) {
         this.textField = textField;
     }
+
+    public void setBackgroundColor(Color color) {
+        textField.setBackground(color);
+    }
+
+
 }
 

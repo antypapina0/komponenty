@@ -4,32 +4,38 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Random;
 
-import components.NumericKeypad;
-import components.TextFieldComponent;
 public class CalculatorPanel extends JPanel {
     private NumericKeypad numericKeypad;
     private TextFieldComponent textFieldComponent;
-    private CustomButton colorButton;
+    private RandomPanel colorPanel;
+
+
     public CalculatorPanel() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         textFieldComponent = new TextFieldComponent("", 10);
         numericKeypad = new NumericKeypad(textFieldComponent.getTextField());
-        colorButton = new CustomButton("Change colors");
         OperatorPanel operatorPanel = new OperatorPanel(textFieldComponent.getTextField());
+
+        colorPanel = new RandomPanel();
+
+
 
         textFieldComponent.setPreferredSize(new Dimension(200, 50));
         numericKeypad.setPreferredSize(new Dimension(200, 150));
         operatorPanel.setPreferredSize(new Dimension(200, 50));
-        colorButton.setPreferredSize(new Dimension(100, 50));
+        colorPanel.setPreferredSize(new Dimension(200, 50));
 
         add(textFieldComponent);
         add(numericKeypad);
         add(operatorPanel);
-        add(colorButton);
+        add(colorPanel);
+
+
 
 
         // Połączenie komponentów
@@ -44,28 +50,59 @@ public class CalculatorPanel extends JPanel {
                 }
             });
         }
-        colorButton.addActionListener(new ActionListener() {
+
+        colorPanel.getButton1().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color randomColor = colorButton.generateRandomColor();
+                Color randomColor = getRandomColor();
+                textFieldComponent.setBackgroundColor(randomColor);
+            }
+        });
+
+
+
+        colorPanel.getButton2().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color randomColor = getRandomColor();
                 for (int i = 0; i < 10; i++) {
-                    JButton button = numericKeypad.getButton(i);
-                    button.setBackground(randomColor);
+                    numericKeypad.getButton(i).setBackground(randomColor);
                 }
+                for (Component component : operatorPanel.getComponents()) {
+                    if (component instanceof JButton) {
+                        component.setBackground(randomColor);
+                    }
+                }
+            }
+        });
+
+        colorPanel.getButton3().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color randomColor = getRandomColor();
+                textFieldComponent.getTextField().setForeground(randomColor);
+            }
+        });
+
+        colorPanel.getButton4().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Font randomFont = colorPanel.getRandomFont();
+
+                    textFieldComponent.getTextField().setFont(randomFont);
 
             }
         });
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Calculator");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        CalculatorPanel panel = new CalculatorPanel();
-        frame.getContentPane().add(panel);
-
-        frame.setSize(300,350);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    private Color getRandomColor() {
+        Random random = new Random();
+        float hue = random.nextFloat();
+        float saturation = 0.5f;
+        float brightness = 0.9f;
+        return Color.getHSBColor(hue, saturation, brightness);
     }
-}
+
+
+    }
+
+
